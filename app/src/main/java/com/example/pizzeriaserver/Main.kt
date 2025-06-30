@@ -20,7 +20,7 @@ import io.ktor.server.plugins.contentnegotiation.*
 
 fun main() {
     DBManager.start()
-    embeddedServer(Netty, port = 8081) {
+    embeddedServer(Netty, port = 8080) {
         install(ContentNegotiation) {
             json()
         }
