@@ -1,17 +1,20 @@
 # Use an official OpenJDK image
 FROM openjdk:17-jdk
 
+# Install xargs (provided by findutils)
+RUN apt-get update && apt-get install -y findutils
+
 # Set the working directory
 WORKDIR /app
 
 # Copy everything into the container
 COPY . .
 
-# Build the project (if you haven’t built locally)
+# Build the project
 RUN ./gradlew installDist
 
-# Expose your server port if needed (e.g., 8080)
+# Expose your server port
 EXPOSE 8080
 
-# Set the default command — adjust YOUR_APP_NAME to match your build output
+# Run the app
 CMD ["./app/build/install/app/bin/app"]
