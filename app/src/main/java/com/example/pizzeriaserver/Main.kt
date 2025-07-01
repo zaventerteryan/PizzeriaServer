@@ -3,6 +3,7 @@ package com.example.pizzeriaserver
 import com.example.pizzeriaserver.Managers.GetManager
 import com.example.pizzeriaserver.SqlDataBase.SqlObjects.AccountSql
 import com.example.pizzeriaserver.SqlDataBase.DBManager
+import com.example.pizzeriaserver.SqlDataBase.DBManager.dbPath
 import com.example.pizzeriaserver.SqlDataBase.SqlObjects.CategorySql
 import com.example.pizzeriaserver.SqlDataBase.SqlObjects.IngredientSql
 import com.example.pizzeriaserver.SqlDataBase.SqlObjects.ProductIngredientSql
@@ -17,6 +18,8 @@ import io.ktor.server.response.*
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.http.*
+import java.io.File
 
 fun main() {
     DBManager.start()
@@ -26,6 +29,22 @@ fun main() {
         }
 
         routing {
+            get("/downloadDB") {
+                val dbFile = File(DBManager.dbPath)
+
+                if (dbFile.exists()) {
+                    call.response.header(
+                        HttpHeaders.ContentDisposition,
+                        ContentDisposition.Attachment.withParameter(ContentDisposition.Parameters.FileName, "data.db").toString()
+                    )
+
+                    call.respondFile(dbFile)
+                    println("✅ Send to App: db \n${dbFile.length()}")
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "Database file not found.")
+                    println("✅ Send to App: Database file not found.")
+                }
+            }
             get("/getData") {
                 try {
                     val syncTimeParam = call.request.queryParameters["syncTime"]

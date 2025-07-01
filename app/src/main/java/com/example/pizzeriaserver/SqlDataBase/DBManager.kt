@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 
 object DBManager {
-    private const val dbPath: String = "app/data.db"
+    const val dbPath: String = "app/data.db"
     private var isStarted: Boolean = false
 
     fun start() {
